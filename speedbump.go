@@ -13,27 +13,29 @@ type Speedbump struct {
 	latencyGen        *simpleLatencyGenerator
 }
 
-func NewSpeedbump(
-	port int,
-	destAddr string,
-	bufferSize int,
-	latencyCfg *LatencyCfg,
-) (*Speedbump, error) {
-	localTCPAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", port))
+type SpeedbumpCfg struct {
+	Port       int
+	DestAddr   string
+	BufferSize int
+	Latency    *LatencyCfg
+}
+
+func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
+	localTCPAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {
 		return nil, fmt.Errorf("Error resolving local address: %s", err)
 	}
-	destTCPAddr, err := net.ResolveTCPAddr("tcp", destAddr)
+	destTCPAddr, err := net.ResolveTCPAddr("tcp", cfg.DestAddr)
 	if err != nil {
 		return nil, fmt.Errorf("Error resolving destination address: %s", err)
 	}
 	s := &Speedbump{
-		bufferSize: bufferSize,
+		bufferSize: int(cfg.BufferSize),
 		srcAddr:    *localTCPAddr,
 		destAddr:   *destTCPAddr,
 		latencyGen: &simpleLatencyGenerator{
 			start: time.Now(),
-			cfg:   latencyCfg,
+			cfg:   cfg.Latency,
 		},
 	}
 	return s, nil
