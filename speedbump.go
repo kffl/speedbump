@@ -10,7 +10,7 @@ type Speedbump struct {
 	bufferSize        int
 	srcAddr, destAddr net.TCPAddr
 	listener          *net.TCPListener
-	latencyGen        *simpleLatencyGenerator
+	latencyGen        LatencyGenerator
 }
 
 type SpeedbumpCfg struct {

@@ -6,7 +6,7 @@ import (
 )
 
 type LatencyGenerator interface {
-	generateLatency(when time.Time) time.Duration
+	generateLatency(time.Time) time.Duration
 }
 
 type LatencyCfg struct {

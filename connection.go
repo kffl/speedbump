@@ -16,7 +16,7 @@ type transitBuffer struct {
 type connection struct {
 	srcConn, destConn io.ReadWriteCloser
 	bufferSize        int
-	latencyGen        *simpleLatencyGenerator
+	latencyGen        LatencyGenerator
 	delayQueue        chan transitBuffer
 	done              chan error
 }
@@ -95,7 +95,7 @@ func newProxyConnection(
 	srcAddr *net.TCPAddr,
 	destAddr *net.TCPAddr,
 	bufferSize int,
-	latencyGen *simpleLatencyGenerator,
+	latencyGen LatencyGenerator,
 ) (*connection, error) {
 	destConn, err := net.DialTCP("tcp", nil, destAddr)
 	if err != nil {
