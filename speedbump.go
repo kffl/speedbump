@@ -55,7 +55,7 @@ func (s *Speedbump) startAcceptLoop() {
 			continue
 		}
 		fmt.Println("Starting a new proxy connection...")
-		p.start()
+		go p.start()
 	}
 }
 
