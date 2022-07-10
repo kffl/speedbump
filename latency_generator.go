@@ -33,6 +33,12 @@ func newSimpleLatencyGenerator(start time.Time, cfg *LatencyCfg) simpleLatencyGe
 			cfg.sinePeriod,
 		})
 	}
+	if cfg.sawAmplitute > 0 && cfg.sawPeriod > 0 {
+		summands = append(summands, sawtoothLatencySummand{
+			cfg.sawAmplitute,
+			cfg.sawPeriod,
+		})
+	}
 	return simpleLatencyGenerator{
 		start:    start,
 		summands: summands,

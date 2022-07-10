@@ -16,10 +16,16 @@ func parseArgs(args []string) (*SpeedbumpCfg, error) {
 			Default("5ms").
 			Duration()
 		sineAmplitude = app.Flag("sine-amplitude", "Amplitude of the latency sine wave.").
-				Default("0ms").
+				PlaceHolder("0").
 				Duration()
 		sinePeriod = app.Flag("sine-period", "Period of the latency sine wave.").
-				Default("5s").
+				PlaceHolder("0").
+				Duration()
+		sawAmplitute = app.Flag("saw-amplitude", "Amplitude of the latency sawtooth wave.").
+				PlaceHolder("0").
+				Duration()
+		sawPeriod = app.Flag("saw-period", "Period of the latency sawtooth wave.").
+				PlaceHolder("0").
 				Duration()
 		destAddr = app.Arg("destination", "TCP proxy destination in host:post format.").
 				Required().
@@ -41,6 +47,8 @@ func parseArgs(args []string) (*SpeedbumpCfg, error) {
 			base:          *latency,
 			sineAmplitude: *sineAmplitude,
 			sinePeriod:    *sinePeriod,
+			sawAmplitute:  *sawAmplitute,
+			sawPeriod:     *sawPeriod,
 		},
 	}
 
