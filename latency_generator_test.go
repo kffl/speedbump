@@ -9,14 +9,12 @@ import (
 
 func TestSimpleLatencyGenerator(t *testing.T) {
 	start := time.Now()
-	g := &simpleLatencyGenerator{
-		start: start,
-		cfg: &LatencyCfg{
-			base:          time.Second * 3,
-			sineAmplitude: time.Second * 2,
-			sinePeriod:    time.Second * 8,
-		},
-	}
+	g := newSimpleLatencyGenerator(start, &LatencyCfg{
+		base:          time.Second * 3,
+		sineAmplitude: time.Second * 2,
+		sinePeriod:    time.Second * 8,
+	})
+
 	startingVal := g.generateLatency(start)
 	after2Sec := g.generateLatency(start.Add(time.Second * 2))
 	after4Sec := g.generateLatency(start.Add(time.Second * 4))
