@@ -33,10 +33,7 @@ func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
 		bufferSize: int(cfg.BufferSize),
 		srcAddr:    *localTCPAddr,
 		destAddr:   *destTCPAddr,
-		latencyGen: &simpleLatencyGenerator{
-			start: time.Now(),
-			cfg:   cfg.Latency,
-		},
+		latencyGen: newSimpleLatencyGenerator(time.Now(), cfg.Latency),
 	}
 	return s, nil
 }

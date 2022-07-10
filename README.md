@@ -18,13 +18,15 @@ usage: speedbump [<flags>] <destination>
 TCP proxy for simulating variable network latency.
 
 Flags:
-  --help                Show context-sensitive help (also try --help-long and --help-man).
-  --port=8000           Port number to listen on.
-  --buffer=64KB         Size of the buffer used for TCP reads.
-  --latency=5ms         Base latency added to proxied traffic.
-  --sine-amplitude=0ms  Amplitude of the latency sine wave.
-  --sine-period=5s      Period of the latency sine wave.
-  --version             Show application version.
+  --help              Show context-sensitive help (also try --help-long and --help-man).
+  --port=8000         Port number to listen on.
+  --buffer=64KB       Size of the buffer used for TCP reads.
+  --latency=5ms       Base latency added to proxied traffic.
+  --sine-amplitude=0  Amplitude of the latency sine wave.
+  --sine-period=0     Period of the latency sine wave.
+  --saw-amplitude=0   Amplitude of the latency sawtooth wave.
+  --saw-period=0      Period of the latency sawtooth wave.
+  --version           Show application version.
 
 Args:
   <destination>  TCP proxy destination in host:post format.
