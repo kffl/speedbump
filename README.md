@@ -1,4 +1,11 @@
 # speedbump - TCP proxy for simulating variable network latency
+<div align="center">
+  <img alt="Speedbump Logo" src="https://github.com/kffl/speedbump/raw/HEAD/assets/speedbump.gif" width="480" height="auto"/>
+</div>
+
+[![CI Workflow](https://github.com/kffl/speedbump/workflows/CI/badge.svg)](https://github.com/kffl/speedbump/actions) [![Go Report Card](https://goreportcard.com/badge/github.com/kffl/speedbump)](https://goreportcard.com/report/github.com/kffl/speedbump) [![Docker Image Version](https://img.shields.io/docker/v/kffl/speedbump)](https://hub.docker.com/r/kffl/speedbump)
+
+Speedbump is a TCP proxy which allows for simulating variable network latency.
 
 ## Usage
 
@@ -31,3 +38,9 @@ Flags:
 Args:
   <destination>  TCP proxy destination in host:post format.
 ```
+
+## License
+
+Copyright Paweł Kuffel 2022, licensed under Apache 2.0 License.
+
+Speedbump logo contains the Go Gopher mascot which was originally designed by Renee French (http://reneefrench.blogspot.com/) and licensed under Creative Commons 3.0 Attributions license.
