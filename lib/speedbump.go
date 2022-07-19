@@ -1,4 +1,5 @@
-package main
+// Package lib allows for using speedbump as a library.
+package lib
 
 import (
 	"context"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 )
 
+// Speedbump is a proxy instance returned by NewSpeedbump
 type Speedbump struct {
 	bufferSize        int
 	srcAddr, destAddr net.TCPAddr
@@ -25,14 +27,21 @@ type Speedbump struct {
 	log       hclog.Logger
 }
 
+// SpeedbumpCfg contains Spedbump instance configuration
 type SpeedbumpCfg struct {
-	Port       int
-	DestAddr   string
+	// Port specifies the local port number to listen on
+	Port int
+	// DestAddr specifies the proxy desination address in host:port format
+	DestAddr string
+	// BufferSize specifies the size of a buffer used for TCP reads
 	BufferSize int
-	Latency    *LatencyCfg
-	LogLevel   string
+	// LatencyCfg specifies parameters of the desired latency summands
+	Latency *LatencyCfg
+	// LogLevel can be one of: DEBUG, TRACE, INFO, WARN, ERROR
+	LogLevel string
 }
 
+// NewSpeedbump creates a Speedbump instance based on a provided config
 func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
 	localTCPAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {
@@ -94,6 +103,9 @@ func (s *Speedbump) startProxyConnection(p *connection) {
 	p.start()
 }
 
+// Start launches a Speedbump instance. This operation will either block
+// until all proxy connections are closed following a Stop() call or
+// return immedietely if a ListenTCP error occurrs at startup.
 func (s *Speedbump) Start() error {
 	listener, err := net.ListenTCP("tcp", &s.srcAddr)
 	if err != nil {
@@ -115,6 +127,9 @@ func (s *Speedbump) Start() error {
 	return nil
 }
 
+// Stop closes the Speedbump instance's TCP listener and notifies all existing
+// proxy connections that Speedbump is shutting down. It doesn't wait for
+// the individual proxy connections to close prior to returning.
 func (s *Speedbump) Stop() {
 	s.log.Info("Stopping speedbump")
 	// close TCP listener so that startAcceptLoop returns

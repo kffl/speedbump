@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"testing"
@@ -10,9 +10,9 @@ import (
 func TestSimpleLatencyGeneratorWithSine(t *testing.T) {
 	start := time.Now()
 	g := newSimpleLatencyGenerator(start, &LatencyCfg{
-		base:          time.Second * 3,
-		sineAmplitude: time.Second * 2,
-		sinePeriod:    time.Second * 8,
+		Base:          time.Second * 3,
+		SineAmplitude: time.Second * 2,
+		SinePeriod:    time.Second * 8,
 	})
 
 	startingVal := g.generateLatency(start)
@@ -28,9 +28,9 @@ func TestSimpleLatencyGeneratorWithSine(t *testing.T) {
 func TestSimpleLatencyGeneratorWithSawtooth(t *testing.T) {
 	start := time.Now()
 	g := newSimpleLatencyGenerator(start, &LatencyCfg{
-		base:         time.Second * 3,
-		sawAmplitute: time.Second * 2,
-		sawPeriod:    time.Second * 8,
+		Base:         time.Second * 3,
+		SawAmplitute: time.Second * 2,
+		SawPeriod:    time.Second * 8,
 	})
 
 	startingVal := g.generateLatency(start)

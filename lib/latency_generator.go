@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"time"
@@ -9,11 +9,11 @@ type LatencyGenerator interface {
 }
 
 type LatencyCfg struct {
-	base          time.Duration
-	sineAmplitude time.Duration
-	sinePeriod    time.Duration
-	sawAmplitute  time.Duration
-	sawPeriod     time.Duration
+	Base          time.Duration
+	SineAmplitude time.Duration
+	SinePeriod    time.Duration
+	SawAmplitute  time.Duration
+	SawPeriod     time.Duration
 }
 
 type latencySummand interface {
@@ -26,17 +26,17 @@ type simpleLatencyGenerator struct {
 }
 
 func newSimpleLatencyGenerator(start time.Time, cfg *LatencyCfg) simpleLatencyGenerator {
-	summands := []latencySummand{baseLatencySummand{cfg.base}}
-	if cfg.sineAmplitude > 0 && cfg.sinePeriod > 0 {
+	summands := []latencySummand{baseLatencySummand{cfg.Base}}
+	if cfg.SineAmplitude > 0 && cfg.SinePeriod > 0 {
 		summands = append(summands, sineLatencySummand{
-			cfg.sineAmplitude,
-			cfg.sinePeriod,
+			cfg.SineAmplitude,
+			cfg.SinePeriod,
 		})
 	}
-	if cfg.sawAmplitute > 0 && cfg.sawPeriod > 0 {
+	if cfg.SawAmplitute > 0 && cfg.SawPeriod > 0 {
 		summands = append(summands, sawtoothLatencySummand{
-			cfg.sawAmplitute,
-			cfg.sawPeriod,
+			cfg.SawAmplitute,
+			cfg.SawPeriod,
 		})
 	}
 	return simpleLatencyGenerator{

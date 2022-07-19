@@ -13,8 +13,8 @@ func TestParseArgsDefault(t *testing.T) {
 	assert.Equal(t, cfg.DestAddr, "localhost:80")
 	assert.Equal(t, cfg.Port, 8000)
 	assert.Equal(t, 0xffff+1, cfg.BufferSize)
-	assert.Equal(t, time.Millisecond*5, cfg.Latency.base)
-	assert.Equal(t, time.Duration(0), cfg.Latency.sineAmplitude)
+	assert.Equal(t, time.Millisecond*5, cfg.Latency.Base)
+	assert.Equal(t, time.Duration(0), cfg.Latency.SineAmplitude)
 }
 
 func TestParseArgsError(t *testing.T) {
@@ -37,9 +37,9 @@ func TestParseArgsAll(t *testing.T) {
 	assert.Equal(t, cfg.DestAddr, "host:777")
 	assert.Equal(t, cfg.Port, 1234)
 	assert.Equal(t, 200, cfg.BufferSize)
-	assert.Equal(t, time.Millisecond*100, cfg.Latency.base)
-	assert.Equal(t, time.Millisecond*50, cfg.Latency.sineAmplitude)
-	assert.Equal(t, time.Minute, cfg.Latency.sinePeriod)
-	assert.Equal(t, time.Duration(0), cfg.Latency.sawAmplitute)
-	assert.Equal(t, time.Duration(0), cfg.Latency.sawPeriod)
+	assert.Equal(t, time.Millisecond*100, cfg.Latency.Base)
+	assert.Equal(t, time.Millisecond*50, cfg.Latency.SineAmplitude)
+	assert.Equal(t, time.Minute, cfg.Latency.SinePeriod)
+	assert.Equal(t, time.Duration(0), cfg.Latency.SawAmplitute)
+	assert.Equal(t, time.Duration(0), cfg.Latency.SawPeriod)
 }

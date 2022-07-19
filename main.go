@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/kffl/speedbump/lib"
 )
 
 func exitWithError(err error) {
@@ -19,7 +21,7 @@ func main() {
 		exitWithError(err)
 	}
 
-	s, err := NewSpeedbump(cfg)
+	s, err := lib.NewSpeedbump(cfg)
 
 	if err != nil {
 		exitWithError(err)
