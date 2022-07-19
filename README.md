@@ -29,6 +29,7 @@ Flags:
   --port=8000         Port number to listen on.
   --buffer=64KB       Size of the buffer used for TCP reads.
   --latency=5ms       Base latency added to proxied traffic.
+  --log-level=INFO    Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.
   --sine-amplitude=0  Amplitude of the latency sine wave.
   --sine-period=0     Period of the latency sine wave.
   --saw-amplitude=0   Amplitude of the latency sawtooth wave.
