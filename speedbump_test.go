@@ -142,6 +142,8 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 
 	trimmedRes = res[:bytes]
 
+	s.Stop()
+
 	assert.Equal(t, []byte("another-test"), trimmedRes)
 	assert.True(t, isDurationCloseTo(time.Millisecond*200, secondOpElapsed, 20))
 }
