@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -82,6 +83,7 @@ func TestReadFromSrc(t *testing.T) {
 		latencyGen: &mockLatencyGenerator{time.Millisecond * 2},
 		delayQueue: delayQueue,
 		done:       done,
+		log:        hclog.NewNullLogger(),
 	}
 
 	c.readFromSrc()
@@ -269,6 +271,7 @@ func TestStart(t *testing.T) {
 		delayQueue: delayQueue,
 		done:       done,
 		ctx:        context.TODO(),
+		log:        hclog.NewNullLogger(),
 	}
 
 	c.start()
@@ -293,7 +296,7 @@ func TestNewProxyConnectionError(t *testing.T) {
 		destAddr,
 		0xffff,
 		&mockLatencyGenerator{time.Millisecond * 10},
-		10,
+		hclog.Default(),
 	)
 
 	assert.NotNil(t, err)

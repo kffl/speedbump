@@ -41,6 +41,7 @@ func TestNewSpeedbump(t *testing.T) {
 		"localhost:1234",
 		0xffff,
 		defaultLatencyCfg,
+		"WARN",
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, err)
@@ -53,6 +54,7 @@ func TestNewSpeedbumpErrorResolvingLocal(t *testing.T) {
 		"localhost:1234",
 		0xffff,
 		defaultLatencyCfg,
+		"WARN",
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, s)
@@ -65,6 +67,7 @@ func TestNewSpeedbumpErrorResolvingDest(t *testing.T) {
 		"nope:1234",
 		0xffff,
 		defaultLatencyCfg,
+		"WARN",
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, s)
@@ -77,6 +80,7 @@ func TestStartListenError(t *testing.T) {
 		"localhost:1234",
 		0xffff,
 		defaultLatencyCfg,
+		"WARN",
 	}
 	s, _ := NewSpeedbump(&cfg)
 
@@ -109,6 +113,7 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 			sineAmplitude: time.Millisecond * 100,
 			sinePeriod:    time.Millisecond * 400,
 		},
+		"WARN",
 	}
 	s, err := NewSpeedbump(&cfg)
 	go s.Start()

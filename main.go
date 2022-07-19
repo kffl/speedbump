@@ -30,10 +30,8 @@ func main() {
 
 	go func() {
 		<-sigs
-		fmt.Println("Starting graceful shutdown...")
 		go s.Stop()
 		<-sigs
-		fmt.Println("Signal caught for the second time. Forcing shutdown.")
 		os.Exit(1)
 	}()
 

@@ -15,6 +15,9 @@ func parseArgs(args []string) (*SpeedbumpCfg, error) {
 		latency = app.Flag("latency", "Base latency added to proxied traffic.").
 			Default("5ms").
 			Duration()
+		logLevel = app.Flag("log-level", "Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.").
+				Default("INFO").
+				Enum("DEBUG", "TRACE", "INFO", "WARN", "ERROR")
 		sineAmplitude = app.Flag("sine-amplitude", "Amplitude of the latency sine wave.").
 				PlaceHolder("0").
 				Duration()
@@ -50,6 +53,7 @@ func parseArgs(args []string) (*SpeedbumpCfg, error) {
 			sawAmplitute:  *sawAmplitute,
 			sawPeriod:     *sawPeriod,
 		},
+		LogLevel: *logLevel,
 	}
 
 	return &cfg, err
