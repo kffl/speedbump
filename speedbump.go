@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/hashicorp/go-hclog"
 )
 
 type Speedbump struct {
@@ -20,6 +22,7 @@ type Speedbump struct {
 	// ctx is used for notifying proxy connections once Stop() is invoked
 	ctx       context.Context
 	ctxCancel context.CancelFunc
+	log       hclog.Logger
 }
 
 type SpeedbumpCfg struct {
@@ -27,6 +30,7 @@ type SpeedbumpCfg struct {
 	DestAddr   string
 	BufferSize int
 	Latency    *LatencyCfg
+	LogLevel   string
 }
 
 func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
@@ -38,11 +42,15 @@ func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error resolving destination address: %s", err)
 	}
+	l := hclog.New(&hclog.LoggerOptions{
+		Level: hclog.LevelFromString(cfg.LogLevel),
+	})
 	s := &Speedbump{
 		bufferSize: int(cfg.BufferSize),
 		srcAddr:    *localTCPAddr,
 		destAddr:   *destTCPAddr,
 		latencyGen: newSimpleLatencyGenerator(time.Now(), cfg.Latency),
+		log:        l,
 	}
 	return s, nil
 }
@@ -55,10 +63,11 @@ func (s *Speedbump) startAcceptLoop() {
 				// the listener was closed, which means that Stop() was called
 				return
 			} else {
-				fmt.Println(fmt.Errorf("Error accepting incoming TCP connection: %s", err))
+				s.log.Warn("Accepting incoming TCP conn failed", "err", err)
 				continue
 			}
 		}
+		l := s.log.With("connection", s.nextConnId)
 		p, err := newProxyConnection(
 			s.ctx,
 			conn,
@@ -66,14 +75,13 @@ func (s *Speedbump) startAcceptLoop() {
 			&s.destAddr,
 			s.bufferSize,
 			s.latencyGen,
-			s.nextConnId,
+			l,
 		)
 		if err != nil {
-			fmt.Println(fmt.Errorf("Error creating new proxy connection: %s", err))
+			s.log.Warn("Creating new proxy conn failed", "err", err)
 			conn.Close()
 			continue
 		}
-		fmt.Printf("Starting a new proxy connection #%d\n", s.nextConnId)
 		s.nextConnId++
 		s.active.Add(1)
 		go s.startProxyConnection(p)
@@ -97,14 +105,18 @@ func (s *Speedbump) Start() error {
 	s.ctx = ctx
 	s.ctxCancel = cancel
 
+	s.log.Info("Started speedbump", "port", s.srcAddr.Port, "dest", s.destAddr.String())
+
 	// startAcceptLoop will block until Stop() is called
 	s.startAcceptLoop()
-	// wait for active proxy connections to be closed
+	s.log.Debug("Waiting for active connections to be closed")
 	s.active.Wait()
+	s.log.Info("Speedbump stopped")
 	return nil
 }
 
 func (s *Speedbump) Stop() {
+	s.log.Info("Stopping speedbump")
 	// close TCP listener so that startAcceptLoop returns
 	s.listener.Close()
 	// notify all proxy connections

@@ -7,6 +7,8 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/go-hclog"
 )
 
 type transitBuffer struct {
@@ -15,13 +17,13 @@ type transitBuffer struct {
 }
 
 type connection struct {
-	id                int
 	srcConn, destConn io.ReadWriteCloser
 	bufferSize        int
 	latencyGen        LatencyGenerator
 	delayQueue        chan transitBuffer
 	done              chan error
 	ctx               context.Context
+	log               hclog.Logger
 }
 
 func (c *connection) readFromSrc() {
@@ -41,6 +43,8 @@ func (c *connection) readFromSrc() {
 			data:       trimmedBuffer,
 			delayUntil: delayUntil,
 		}
+
+		c.log.Trace("Added to delay queue", "bytes", bytes, "delay", desiredLatency)
 
 		c.delayQueue <- t
 
@@ -83,6 +87,7 @@ func (c *connection) readFromDelayQueue() {
 // (dest->src, src->queue, queue->dest). This operation will block until
 // either an error is sent via the done channel or the context is cancelled.
 func (c *connection) start() {
+	c.log.Debug("Starting a new proxy connection")
 	go c.readFromDest()
 	go c.readFromSrc()
 	go c.readFromDelayQueue()
@@ -100,15 +105,15 @@ func (c *connection) start() {
 
 func (c *connection) handleError(err error) {
 	if !strings.HasSuffix(err.Error(), io.EOF.Error()) {
-		fmt.Printf("Closing proxy connection due to an unexpected error: %s\n", err)
+		c.log.Warn("Closing proxy connection due to an unexpected error", "err", err)
 	} else {
-		fmt.Println("Closing proxy connection (EOF)")
+		c.log.Debug("Closing proxy connection (EOF)")
 	}
 	c.closeProxyConnections()
 }
 
 func (c *connection) handleStop() {
-	fmt.Printf("Stopping proxy connection #%d\n", c.id)
+	c.log.Info("Stopping proxy connection")
 	c.closeProxyConnections()
 }
 
@@ -124,14 +129,13 @@ func newProxyConnection(
 	destAddr *net.TCPAddr,
 	bufferSize int,
 	latencyGen LatencyGenerator,
-	id int,
+	logger hclog.Logger,
 ) (*connection, error) {
 	destConn, err := net.DialTCP("tcp", nil, destAddr)
 	if err != nil {
 		return nil, fmt.Errorf("Error dialing remote address: %s", err)
 	}
 	c := &connection{
-		id:         id,
 		srcConn:    clientConn,
 		destConn:   destConn,
 		bufferSize: bufferSize,
@@ -139,6 +143,7 @@ func newProxyConnection(
 		delayQueue: make(chan transitBuffer, 1024),
 		done:       make(chan error, 3),
 		ctx:        ctx,
+		log:        logger,
 	}
 
 	return c, nil
