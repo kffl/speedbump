@@ -1,6 +1,6 @@
 # speedbump - TCP proxy with variable latency
 <div align="center">
-  <img alt="speedbump logo" src="https://github.com/kffl/speedbump/raw/head/assets/speedbump.gif" width="480" height="auto"/>
+  <img alt="speedbump logo" src="https://github.com/kffl/speedbump/raw/HEAD/assets/speedbump.gif" width="480" height="auto"/>
 </div>
 Speedbump is a TCP proxy written in Go which allows for simulating variable network latency.
 
@@ -20,7 +20,7 @@ Spawn a new instance with a base latency of 300ms and a sawtooth wave latency su
 speedbump --latency=200ms --saw-amplitude=200ms --saw-period=2m --port=2000 localhost:80
 ```
 <div align="center">
-  <img alt="speedbump sawtooth wave graph" src="https://github.com/kffl/speedbump/raw/head/assets/sawtooth.svg" width="800" height="auto"/>
+  <img alt="speedbump sawtooth wave graph" src="https://github.com/kffl/speedbump/raw/HEAD/assets/sawtooth.svg" width="800" height="auto"/>
 </div>
 
 ## CLI Arguments Reference:
