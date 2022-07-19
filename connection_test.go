@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"net"
 	"testing"
@@ -267,6 +268,7 @@ func TestStart(t *testing.T) {
 		latencyGen: &mockLatencyGenerator{time.Millisecond * 10},
 		delayQueue: delayQueue,
 		done:       done,
+		ctx:        context.TODO(),
 	}
 
 	c.start()
@@ -285,11 +287,13 @@ func TestNewProxyConnectionError(t *testing.T) {
 	mockClientConn := mockConn{}
 
 	_, err := newProxyConnection(
+		context.TODO(),
 		mockClientConn,
 		localAddr,
 		destAddr,
 		0xffff,
 		&mockLatencyGenerator{time.Millisecond * 10},
+		10,
 	)
 
 	assert.NotNil(t, err)
