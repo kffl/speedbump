@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -12,9 +12,9 @@ import (
 )
 
 var defaultLatencyCfg = &LatencyCfg{
-	base:          time.Millisecond * 5,
-	sineAmplitude: time.Duration(0),
-	sinePeriod:    time.Minute,
+	Base:          time.Millisecond * 5,
+	SineAmplitude: time.Duration(0),
+	SinePeriod:    time.Minute,
 }
 
 func startEchoSrv(port int) error {
@@ -109,9 +109,9 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 		testSrvAddr,
 		0xffff,
 		&LatencyCfg{
-			base:          time.Millisecond * 100,
-			sineAmplitude: time.Millisecond * 100,
-			sinePeriod:    time.Millisecond * 400,
+			Base:          time.Millisecond * 100,
+			SineAmplitude: time.Millisecond * 100,
+			SinePeriod:    time.Millisecond * 400,
 		},
 		"WARN",
 	}

@@ -1,10 +1,11 @@
 package main
 
 import (
+	"github.com/kffl/speedbump/lib"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-func parseArgs(args []string) (*SpeedbumpCfg, error) {
+func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 	var app = kingpin.New("speedbump", "TCP proxy for simulating variable network latency.")
 
 	var (
@@ -35,23 +36,23 @@ func parseArgs(args []string) (*SpeedbumpCfg, error) {
 				String()
 	)
 
-	app.Version("0.1.0-rc2")
+	app.Version("0.1.0-rc4")
 	_, err := app.Parse(args)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var cfg = SpeedbumpCfg{
+	var cfg = lib.SpeedbumpCfg{
 		Port:       *port,
 		DestAddr:   *destAddr,
 		BufferSize: int(*bufferSize),
-		Latency: &LatencyCfg{
-			base:          *latency,
-			sineAmplitude: *sineAmplitude,
-			sinePeriod:    *sinePeriod,
-			sawAmplitute:  *sawAmplitute,
-			sawPeriod:     *sawPeriod,
+		Latency: &lib.LatencyCfg{
+			Base:          *latency,
+			SineAmplitude: *sineAmplitude,
+			SinePeriod:    *sinePeriod,
+			SawAmplitute:  *sawAmplitute,
+			SawPeriod:     *sawPeriod,
 		},
 		LogLevel: *logLevel,
 	}
