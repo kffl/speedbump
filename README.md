@@ -6,7 +6,9 @@ Speedbump is a TCP proxy written in Go which allows for simulating variable netw
 
 [![CI Workflow](https://github.com/kffl/speedbump/workflows/CI/badge.svg)](https://github.com/kffl/speedbump/actions) [![Go Report Card](https://goreportcard.com/badge/github.com/kffl/speedbump)](https://goreportcard.com/report/github.com/kffl/speedbump) [![Docker Image Version](https://img.shields.io/docker/v/kffl/speedbump)](https://hub.docker.com/r/kffl/speedbump) [![GoDoc](https://godoc.org/github.com/kffl/speedbump/lib?status.svg)](https://godoc.org/github.com/kffl/speedbump/lib)
 
-## Example usage
+## Usage
+
+## Basic usage examples
 
 Spawn a new instance listening on port 2000 that proxies TCP traffic to localhost:80 with a base latency of 100ms and sine wave amplitude of 100ms (resulting in maximum added latency being 200ms and minimum being 0), period of which is 1 minute:
 
@@ -17,10 +19,18 @@ speedbump --latency=100ms --sine-amplitude=100ms --sine-period=1m --port=2000 lo
 Spawn a new instance with a base latency of 300ms and a sawtooth wave latency summand with amplitude of 200ms and period of 2 minutes (visualized by the graph below):
 
 ```
-speedbump --latency=200ms --saw-amplitude=200ms --saw-period=2m --port=2000 localhost:80
+speedbump --latency=300ms --saw-amplitude=200ms --saw-period=2m --port=2000 localhost:80
 ```
 <div align="center">
   <img alt="speedbump sawtooth wave graph" src="https://github.com/kffl/speedbump/raw/HEAD/assets/sawtooth.svg" width="800" height="auto"/>
+</div>
+
+### Combining latency summands
+
+It is possible to run speedbump with multiple latency summands at once:
+
+<div align="center">
+  <img alt="speedbump sawtooth + sine graph" src="https://github.com/kffl/speedbump/raw/HEAD/assets/combined.svg" width="800" height="auto"/>
 </div>
 
 ## CLI Arguments Reference:
