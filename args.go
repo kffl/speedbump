@@ -36,7 +36,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 				String()
 	)
 
-	app.Version("0.1.0-rc4")
+	app.Version("0.1.0")
 	_, err := app.Parse(args)
 
 	if err != nil {
