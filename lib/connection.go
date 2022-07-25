@@ -44,7 +44,7 @@ func (c *connection) readFromSrc() {
 			delayUntil: delayUntil,
 		}
 
-		c.log.Trace("Added to delay queue", "bytes", bytes, "delay", desiredLatency)
+		c.log.Trace("Writing to delay queue", "bytes", bytes, "delay", desiredLatency)
 
 		c.delayQueue <- t
 
@@ -72,6 +72,8 @@ func (c *connection) readFromDest() {
 func (c *connection) readFromDelayQueue() {
 	for {
 		t := <-c.delayQueue
+
+		c.log.Trace("Read from delay queue", "bytes", len(t.data))
 
 		time.Sleep(time.Until(t.delayUntil))
 
@@ -128,6 +130,7 @@ func newProxyConnection(
 	srcAddr *net.TCPAddr,
 	destAddr *net.TCPAddr,
 	bufferSize int,
+	queueSize int,
 	latencyGen LatencyGenerator,
 	logger hclog.Logger,
 ) (*connection, error) {
@@ -140,7 +143,7 @@ func newProxyConnection(
 		destConn:   destConn,
 		bufferSize: bufferSize,
 		latencyGen: latencyGen,
-		delayQueue: make(chan transitBuffer, 1024),
+		delayQueue: make(chan transitBuffer, queueSize),
 		done:       make(chan error, 3),
 		ctx:        ctx,
 		log:        logger,

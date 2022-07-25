@@ -40,6 +40,7 @@ func TestNewSpeedbump(t *testing.T) {
 		8000,
 		"localhost:1234",
 		0xffff,
+		100,
 		defaultLatencyCfg,
 		"WARN",
 	}
@@ -53,6 +54,7 @@ func TestNewSpeedbumpErrorResolvingLocal(t *testing.T) {
 		-1,
 		"localhost:1234",
 		0xffff,
+		100,
 		defaultLatencyCfg,
 		"WARN",
 	}
@@ -66,6 +68,7 @@ func TestNewSpeedbumpErrorResolvingDest(t *testing.T) {
 		8000,
 		"nope:1234",
 		0xffff,
+		100,
 		defaultLatencyCfg,
 		"WARN",
 	}
@@ -74,11 +77,26 @@ func TestNewSpeedbumpErrorResolvingDest(t *testing.T) {
 	assert.True(t, strings.HasPrefix(err.Error(), "Error resolving destination"))
 }
 
+func TestNewSpeedbumpDefaultQueueSize(t *testing.T) {
+	cfg := SpeedbumpCfg{
+		Port:       8000,
+		DestAddr:   "localhost:1234",
+		BufferSize: 0xffff,
+		// QueueSize is ommitted
+		Latency:  defaultLatencyCfg,
+		LogLevel: "WARN",
+	}
+	s, err := NewSpeedbump(&cfg)
+	assert.Nil(t, err)
+	assert.Equal(t, 1024, s.queueSize)
+}
+
 func TestStartListenError(t *testing.T) {
 	cfg := SpeedbumpCfg{
 		1, // a privileged port
 		"localhost:1234",
 		0xffff,
+		100,
 		defaultLatencyCfg,
 		"WARN",
 	}
@@ -108,6 +126,7 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 		8000,
 		testSrvAddr,
 		0xffff,
+		100,
 		&LatencyCfg{
 			Base:          time.Millisecond * 100,
 			SineAmplitude: time.Millisecond * 100,
