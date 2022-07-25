@@ -28,6 +28,7 @@ func main() {
 		Port:       8000,
 		DestAddr:   "localhost:80",
 		BufferSize: 16384,
+		QueueSize: 2048,
 		Latency: &speedbump.LatencyCfg{
 			Base:          time.Millisecond * 100,
 			SineAmplitude: time.Millisecond * 50,

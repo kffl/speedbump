@@ -46,6 +46,7 @@ Flags:
   --help              Show context-sensitive help (also try --help-long and --help-man).
   --port=8000         Port number to listen on.
   --buffer=64KB       Size of the buffer used for TCP reads.
+  --queue-size=1024   Size of the delay queue storing read buffers.
   --latency=5ms       Base latency added to proxied traffic.
   --log-level=INFO    Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.
   --sine-amplitude=0  Amplitude of the latency sine wave.

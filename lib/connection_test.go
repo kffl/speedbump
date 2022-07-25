@@ -210,6 +210,7 @@ func TestReadFromDelayQueue(t *testing.T) {
 		bufferSize: 20,
 		delayQueue: delayQueue,
 		done:       done,
+		log:        hclog.NewNullLogger(),
 	}
 
 	delayQueue <- transitBuffer{[]byte("testdata"), time.Now().Add(time.Millisecond)}
@@ -295,6 +296,7 @@ func TestNewProxyConnectionError(t *testing.T) {
 		localAddr,
 		destAddr,
 		0xffff,
+		100,
 		&mockLatencyGenerator{time.Millisecond * 10},
 		hclog.Default(),
 	)

@@ -13,6 +13,9 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		bufferSize = app.Flag("buffer", "Size of the buffer used for TCP reads.").
 				Default("64KB").
 				Bytes()
+		queueSize = app.Flag("queue-size", "Size of the delay queue storing read buffers.").
+				Default("1024").
+				Int()
 		latency = app.Flag("latency", "Base latency added to proxied traffic.").
 			Default("5ms").
 			Duration()
@@ -47,6 +50,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		Port:       *port,
 		DestAddr:   *destAddr,
 		BufferSize: int(*bufferSize),
+		QueueSize:  *queueSize,
 		Latency: &lib.LatencyCfg{
 			Base:          *latency,
 			SineAmplitude: *sineAmplitude,

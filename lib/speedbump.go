@@ -15,6 +15,7 @@ import (
 // Speedbump is a proxy instance returned by NewSpeedbump
 type Speedbump struct {
 	bufferSize        int
+	queueSize         int
 	srcAddr, destAddr net.TCPAddr
 	listener          *net.TCPListener
 	latencyGen        LatencyGenerator
@@ -33,8 +34,10 @@ type SpeedbumpCfg struct {
 	Port int
 	// DestAddr specifies the proxy desination address in host:port format
 	DestAddr string
-	// BufferSize specifies the size of a buffer used for TCP reads
+	// BufferSize specifies the number of bytes in a buffer used for TCP reads
 	BufferSize int
+	// The size of the delay queue containing read buffers (defaults to 1024)
+	QueueSize int
 	// LatencyCfg specifies parameters of the desired latency summands
 	Latency *LatencyCfg
 	// LogLevel can be one of: DEBUG, TRACE, INFO, WARN, ERROR
@@ -54,8 +57,15 @@ func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
 	l := hclog.New(&hclog.LoggerOptions{
 		Level: hclog.LevelFromString(cfg.LogLevel),
 	})
+	queueSize := cfg.QueueSize
+	// setting a default queueSize in order to maintain compatibility
+	// with speedbump @v0.1.0 used as a dependency in other Go programs
+	if queueSize == 0 {
+		queueSize = 1024
+	}
 	s := &Speedbump{
 		bufferSize: int(cfg.BufferSize),
+		queueSize:  queueSize,
 		srcAddr:    *localTCPAddr,
 		destAddr:   *destTCPAddr,
 		latencyGen: newSimpleLatencyGenerator(time.Now(), cfg.Latency),
@@ -83,6 +93,7 @@ func (s *Speedbump) startAcceptLoop() {
 			&s.srcAddr,
 			&s.destAddr,
 			s.bufferSize,
+			s.queueSize,
 			s.latencyGen,
 			l,
 		)
