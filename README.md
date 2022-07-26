@@ -4,16 +4,27 @@
 </div>
 Speedbump is a TCP proxy written in Go which allows for simulating variable network latency.
 
-[![CI Workflow](https://github.com/kffl/speedbump/workflows/CI/badge.svg)](https://github.com/kffl/speedbump/actions) [![Go Report Card](https://goreportcard.com/badge/github.com/kffl/speedbump)](https://goreportcard.com/report/github.com/kffl/speedbump) [![Docker Image Version](https://img.shields.io/docker/v/kffl/speedbump)](https://hub.docker.com/r/kffl/speedbump) [![GoDoc](https://godoc.org/github.com/kffl/speedbump/lib?status.svg)](https://godoc.org/github.com/kffl/speedbump/lib)
+[![CI Workflow](https://github.com/kffl/speedbump/workflows/CI/badge.svg)](https://github.com/kffl/speedbump/actions) [![Go Report Card](https://goreportcard.com/badge/github.com/kffl/speedbump)](https://goreportcard.com/report/github.com/kffl/speedbump) [![Docker Pulls](https://img.shields.io/docker/pulls/kffl/speedbump)](https://hub.docker.com/r/kffl/speedbump) [![Docker Image Version](https://img.shields.io/docker/v/kffl/speedbump)](https://hub.docker.com/r/kffl/speedbump) [![GoDoc](https://godoc.org/github.com/kffl/speedbump/lib?status.svg)](https://godoc.org/github.com/kffl/speedbump/lib)
 
 ## Usage
 
-## Basic usage examples
+### Installation
+
+The easiest way to install speedbump is to download pre-built binaries for your platform that are automatically attached to each [release](https://github.com/kffl/speedbump/releases/) under _Assets_. If you wish to build speedbump from source, clone this repository and run `go build`. Alternatively, you can run speedbump as a container using the [kffl/speedbump](https://hub.docker.com/r/kffl/speedbump) image.
+
+### Basic usage examples
 
 Spawn a new instance listening on port 2000 that proxies TCP traffic to localhost:80 with a base latency of 100ms and sine wave amplitude of 100ms (resulting in maximum added latency being 200ms and minimum being 0), period of which is 1 minute:
 
 ```
 speedbump --latency=100ms --sine-amplitude=100ms --sine-period=1m --port=2000 localhost:80
+```
+
+or when running speedbump using the [kffl/speedbump](https://hub.docker.com/r/kffl/speedbump) container image:
+
+```
+docker run --net=host kffl/speedbump:latest --latency=100ms --sine-amplitude=100ms \
+           --sine-period=1m --port=2000 localhost:80
 ```
 
 Spawn a new instance with a base latency of 300ms and a sawtooth wave latency summand with amplitude of 200ms and period of 2 minutes (visualized by the graph below):
