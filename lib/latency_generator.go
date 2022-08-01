@@ -9,11 +9,13 @@ type LatencyGenerator interface {
 }
 
 type LatencyCfg struct {
-	Base          time.Duration
-	SineAmplitude time.Duration
-	SinePeriod    time.Duration
-	SawAmplitute  time.Duration
-	SawPeriod     time.Duration
+	Base            time.Duration
+	SineAmplitude   time.Duration
+	SinePeriod      time.Duration
+	SawAmplitute    time.Duration
+	SawPeriod       time.Duration
+	SquareAmplitude time.Duration
+	SquarePeriod    time.Duration
 }
 
 type latencySummand interface {
@@ -37,6 +39,12 @@ func newSimpleLatencyGenerator(start time.Time, cfg *LatencyCfg) simpleLatencyGe
 		summands = append(summands, sawtoothLatencySummand{
 			cfg.SawAmplitute,
 			cfg.SawPeriod,
+		})
+	}
+	if cfg.SquareAmplitude > 0 && cfg.SquarePeriod > 0 {
+		summands = append(summands, squareLatencySummand{
+			cfg.SquareAmplitude,
+			cfg.SquarePeriod,
 		})
 	}
 	return simpleLatencyGenerator{
