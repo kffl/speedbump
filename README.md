@@ -1,4 +1,5 @@
 # speedbump - TCP proxy with variable latency
+
 <div align="center">
   <img alt="speedbump logo" src="https://github.com/kffl/speedbump/raw/HEAD/assets/speedbump.gif" width="480" height="auto"/>
 </div>
@@ -32,6 +33,7 @@ Spawn a new instance with a base latency of 300ms and a sawtooth wave latency su
 ```
 speedbump --latency=300ms --saw-amplitude=200ms --saw-period=2m --port=2000 localhost:80
 ```
+
 <div align="center">
   <img alt="speedbump sawtooth wave graph" src="https://github.com/kffl/speedbump/raw/HEAD/assets/sawtooth.svg" width="800" height="auto"/>
 </div>
@@ -54,17 +56,19 @@ usage: speedbump [<flags>] <destination>
 TCP proxy for simulating variable network latency.
 
 Flags:
-  --help              Show context-sensitive help (also try --help-long and --help-man).
-  --port=8000         Port number to listen on.
-  --buffer=64KB       Size of the buffer used for TCP reads.
-  --queue-size=1024   Size of the delay queue storing read buffers.
-  --latency=5ms       Base latency added to proxied traffic.
-  --log-level=INFO    Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.
-  --sine-amplitude=0  Amplitude of the latency sine wave.
-  --sine-period=0     Period of the latency sine wave.
-  --saw-amplitude=0   Amplitude of the latency sawtooth wave.
-  --saw-period=0      Period of the latency sawtooth wave.
-  --version           Show application version.
+  --help                Show context-sensitive help (also try --help-long and --help-man).
+  --port=8000           Port number to listen on.
+  --buffer=64KB         Size of the buffer used for TCP reads.
+  --queue-size=1024     Size of the delay queue storing read buffers.
+  --latency=5ms         Base latency added to proxied traffic.
+  --log-level=INFO      Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.
+  --sine-amplitude=0    Amplitude of the latency sine wave.
+  --sine-period=0       Period of the latency sine wave.
+  --saw-amplitude=0     Amplitude of the latency sawtooth wave.
+  --saw-period=0        Period of the latency sawtooth wave.
+  --square-amplitude=0  Amplitude of the latency square wave.
+  --square-period=0     Period of the latency square wave.
+  --version             Show application version.
 
 Args:
   <destination>  TCP proxy destination in host:post format.
