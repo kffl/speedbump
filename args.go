@@ -60,11 +60,11 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		Latency: &lib.LatencyCfg{
 			Base:            *latency,
 			SineAmplitude:   *sineAmplitude,
-			SinePeriod:    	 *sinePeriod,
-			SawAmplitute:  	 *sawAmplitute,
-			SawPeriod:     	 *sawPeriod,
-			SquareAmplitude:*squareAmplitude,
-			SquarePeriod: 	 *suqarePeriod,
+			SinePeriod:      *sinePeriod,
+			SawAmplitute:    *sawAmplitute,
+			SawPeriod:       *sawPeriod,
+			SquareAmplitude: *squareAmplitude,
+			SquarePeriod:    *suqarePeriod,
 		},
 		LogLevel: *logLevel,
 	}
