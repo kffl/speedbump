@@ -32,6 +32,8 @@ func TestParseArgsAll(t *testing.T) {
 			"--sine-period=1m",
 			"--square-amplitude=123ms",
 			"--square-period=3m",
+			"--triangle-amplitude=150ms",
+			"--triangle-period=2m",
 			"host:777",
 		},
 	)
@@ -46,4 +48,6 @@ func TestParseArgsAll(t *testing.T) {
 	assert.Equal(t, time.Duration(0), cfg.Latency.SawPeriod)
 	assert.Equal(t, time.Millisecond*123, cfg.Latency.SquareAmplitude)
 	assert.Equal(t, time.Minute*3, cfg.Latency.SquarePeriod)
+	assert.Equal(t, time.Millisecond*150, cfg.Latency.TriangleAmplitude)
+	assert.Equal(t, time.Minute*2, cfg.Latency.TrianglePeriod)
 }

@@ -9,13 +9,15 @@ type LatencyGenerator interface {
 }
 
 type LatencyCfg struct {
-	Base            time.Duration
-	SineAmplitude   time.Duration
-	SinePeriod      time.Duration
-	SawAmplitute    time.Duration
-	SawPeriod       time.Duration
-	SquareAmplitude time.Duration
-	SquarePeriod    time.Duration
+	Base              time.Duration
+	SineAmplitude     time.Duration
+	SinePeriod        time.Duration
+	SawAmplitute      time.Duration
+	SawPeriod         time.Duration
+	SquareAmplitude   time.Duration
+	SquarePeriod      time.Duration
+	TriangleAmplitude time.Duration
+	TrianglePeriod    time.Duration
 }
 
 type latencySummand interface {
@@ -45,6 +47,12 @@ func newSimpleLatencyGenerator(start time.Time, cfg *LatencyCfg) simpleLatencyGe
 		summands = append(summands, squareLatencySummand{
 			cfg.SquareAmplitude,
 			cfg.SquarePeriod,
+		})
+	}
+	if cfg.TriangleAmplitude > 0 && cfg.TrianglePeriod > 0 {
+		summands = append(summands, triangleLatencySummand{
+			cfg.TriangleAmplitude,
+			cfg.TrianglePeriod,
 		})
 	}
 	return simpleLatencyGenerator{
