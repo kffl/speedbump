@@ -29,7 +29,7 @@ func TestSimpleLatencyGeneratorWithSawtooth(t *testing.T) {
 	start := time.Now()
 	g := newSimpleLatencyGenerator(start, &LatencyCfg{
 		Base:         time.Second * 3,
-		SawAmplitute: time.Second * 2,
+		SawAmplitude: time.Second * 2,
 		SawPeriod:    time.Second * 8,
 	})
 

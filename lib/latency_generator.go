@@ -12,7 +12,7 @@ type LatencyCfg struct {
 	Base              time.Duration
 	SineAmplitude     time.Duration
 	SinePeriod        time.Duration
-	SawAmplitute      time.Duration
+	SawAmplitude      time.Duration
 	SawPeriod         time.Duration
 	SquareAmplitude   time.Duration
 	SquarePeriod      time.Duration
@@ -37,9 +37,9 @@ func newSimpleLatencyGenerator(start time.Time, cfg *LatencyCfg) simpleLatencyGe
 			cfg.SinePeriod,
 		})
 	}
-	if cfg.SawAmplitute > 0 && cfg.SawPeriod > 0 {
+	if cfg.SawAmplitude > 0 && cfg.SawPeriod > 0 {
 		summands = append(summands, sawtoothLatencySummand{
-			cfg.SawAmplitute,
+			cfg.SawAmplitude,
 			cfg.SawPeriod,
 		})
 	}

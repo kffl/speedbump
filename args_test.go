@@ -44,7 +44,7 @@ func TestParseArgsAll(t *testing.T) {
 	assert.Equal(t, time.Millisecond*100, cfg.Latency.Base)
 	assert.Equal(t, time.Millisecond*50, cfg.Latency.SineAmplitude)
 	assert.Equal(t, time.Minute, cfg.Latency.SinePeriod)
-	assert.Equal(t, time.Duration(0), cfg.Latency.SawAmplitute)
+	assert.Equal(t, time.Duration(0), cfg.Latency.SawAmplitude)
 	assert.Equal(t, time.Duration(0), cfg.Latency.SawPeriod)
 	assert.Equal(t, time.Millisecond*123, cfg.Latency.SquareAmplitude)
 	assert.Equal(t, time.Minute*3, cfg.Latency.SquarePeriod)
