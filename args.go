@@ -28,7 +28,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		sinePeriod = app.Flag("sine-period", "Period of the latency sine wave.").
 				PlaceHolder("0").
 				Duration()
-		SawAmplitude = app.Flag("saw-amplitude", "Amplitude of the latency sawtooth wave.").
+		sawAmplitude = app.Flag("saw-amplitude", "Amplitude of the latency sawtooth wave.").
 				PlaceHolder("0").
 				Duration()
 		sawPeriod = app.Flag("saw-period", "Period of the latency sawtooth wave.").
@@ -67,7 +67,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 			Base:              *latency,
 			SineAmplitude:     *sineAmplitude,
 			SinePeriod:        *sinePeriod,
-			SawAmplitude:      *SawAmplitude,
+			SawAmplitude:      *sawAmplitude,
 			SawPeriod:         *sawPeriod,
 			SquareAmplitude:   *squareAmplitude,
 			SquarePeriod:      *squarePeriod,
