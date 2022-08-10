@@ -13,9 +13,9 @@ func TestSawtoothLatencySummand(t *testing.T) {
 		period:    time.Minute,
 	}
 
-	assert.Equal(t, s.getLatency(time.Duration(0)), time.Millisecond*0)
-	assert.Equal(t, s.getLatency(time.Second*15), time.Millisecond*500)
-	assert.Equal(t, s.getLatency(time.Second*30), time.Millisecond*-1000)
-	assert.Equal(t, s.getLatency(time.Second*36), time.Millisecond*-800)
-	assert.Equal(t, s.getLatency(time.Second*60), time.Millisecond*0)
+	assert.Equal(t, time.Millisecond*0, s.getLatency(time.Duration(0)))
+	assert.Equal(t, time.Millisecond*500, s.getLatency(time.Second*15))
+	assert.Equal(t, time.Millisecond*-1000, s.getLatency(time.Second*30))
+	assert.Equal(t, time.Millisecond*-800, s.getLatency(time.Second*36))
+	assert.Equal(t, time.Millisecond*0, s.getLatency(time.Second*60))
 }

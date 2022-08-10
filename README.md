@@ -56,19 +56,23 @@ usage: speedbump [<flags>] <destination>
 TCP proxy for simulating variable network latency.
 
 Flags:
-  --help                Show context-sensitive help (also try --help-long and --help-man).
-  --port=8000           Port number to listen on.
-  --buffer=64KB         Size of the buffer used for TCP reads.
-  --queue-size=1024     Size of the delay queue storing read buffers.
-  --latency=5ms         Base latency added to proxied traffic.
-  --log-level=INFO      Log level. Possible values: DEBUG, TRACE, INFO, WARN, ERROR.
-  --sine-amplitude=0    Amplitude of the latency sine wave.
-  --sine-period=0       Period of the latency sine wave.
-  --saw-amplitude=0     Amplitude of the latency sawtooth wave.
-  --saw-period=0        Period of the latency sawtooth wave.
-  --square-amplitude=0  Amplitude of the latency square wave.
-  --square-period=0     Period of the latency square wave.
-  --version             Show application version.
+  --help                  Show context-sensitive help (also try --help-long and
+                          --help-man).
+  --port=8000             Port number to listen on.
+  --buffer=64KB           Size of the buffer used for TCP reads.
+  --queue-size=1024       Size of the delay queue storing read buffers.
+  --latency=5ms           Base latency added to proxied traffic.
+  --log-level=INFO        Log level. Possible values: DEBUG, TRACE, INFO, WARN,
+                          ERROR.
+  --sine-amplitude=0      Amplitude of the latency sine wave.
+  --sine-period=0         Period of the latency sine wave.
+  --saw-amplitude=0       Amplitude of the latency sawtooth wave.
+  --saw-period=0          Period of the latency sawtooth wave.
+  --square-amplitude=0    Amplitude of the latency square wave.
+  --square-period=0       Period of the latency square wave.
+  --triangle-amplitude=0  Amplitude of the latency triangle wave.
+  --triangle-period=0     Period of the latency triangle wave.
+  --version               Show application version.
 
 Args:
   <destination>  TCP proxy destination in host:post format.

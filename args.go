@@ -28,7 +28,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		sinePeriod = app.Flag("sine-period", "Period of the latency sine wave.").
 				PlaceHolder("0").
 				Duration()
-		sawAmplitute = app.Flag("saw-amplitude", "Amplitude of the latency sawtooth wave.").
+		sawAmplitude = app.Flag("saw-amplitude", "Amplitude of the latency sawtooth wave.").
 				PlaceHolder("0").
 				Duration()
 		sawPeriod = app.Flag("saw-period", "Period of the latency sawtooth wave.").
@@ -37,7 +37,13 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		squareAmplitude = app.Flag("square-amplitude", "Amplitude of the latency square wave.").
 				PlaceHolder("0").
 				Duration()
-		suqarePeriod = app.Flag("square-period", "Period of the latency square wave.").
+		squarePeriod = app.Flag("square-period", "Period of the latency square wave.").
+				PlaceHolder("0").
+				Duration()
+		triangleAmplitude = app.Flag("triangle-amplitude", "Amplitude of the latency triangle wave.").
+					PlaceHolder("0").
+					Duration()
+		trianglePeriod = app.Flag("triangle-period", "Period of the latency triangle wave.").
 				PlaceHolder("0").
 				Duration()
 		destAddr = app.Arg("destination", "TCP proxy destination in host:post format.").
@@ -58,13 +64,15 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 		BufferSize: int(*bufferSize),
 		QueueSize:  *queueSize,
 		Latency: &lib.LatencyCfg{
-			Base:            *latency,
-			SineAmplitude:   *sineAmplitude,
-			SinePeriod:      *sinePeriod,
-			SawAmplitute:    *sawAmplitute,
-			SawPeriod:       *sawPeriod,
-			SquareAmplitude: *squareAmplitude,
-			SquarePeriod:    *suqarePeriod,
+			Base:              *latency,
+			SineAmplitude:     *sineAmplitude,
+			SinePeriod:        *sinePeriod,
+			SawAmplitude:      *sawAmplitude,
+			SawPeriod:         *sawPeriod,
+			SquareAmplitude:   *squareAmplitude,
+			SquarePeriod:      *squarePeriod,
+			TriangleAmplitude: *triangleAmplitude,
+			TrianglePeriod:    *trianglePeriod,
 		},
 		LogLevel: *logLevel,
 	}
