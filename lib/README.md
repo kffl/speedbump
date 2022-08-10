@@ -28,13 +28,13 @@ func main() {
 		Port:       8000,
 		DestAddr:   "localhost:80",
 		BufferSize: 16384,
-		QueueSize: 2048,
+		QueueSize:  2048,
 		Latency: &speedbump.LatencyCfg{
 			Base:          time.Millisecond * 100,
 			SineAmplitude: time.Millisecond * 50,
 			SinePeriod:    time.Minute,
 		},
-		LogLevel: "INFO",
+		LogLevel: "TRACE",
 	}
 
 	s, err := speedbump.NewSpeedbump(&cfg)
@@ -44,14 +44,8 @@ func main() {
 		return
 	}
 
-	go func() {
-		// stop the proxy after 5 minutes
-		time.Sleep(time.Second * 5)
-		s.Stop()
-	}()
-
-	// Start() will either block until .Stop() is called
-	// or return immedietely if there is a startup error
+	// Start() will unblock as soon as the proxy is started
+	// or return an error if there is a startup error
 	err = s.Start()
 
 	if err != nil {
@@ -59,7 +53,20 @@ func main() {
 		return
 	}
 
+	// let's stop the proxy after 5 mins
+	time.Sleep(time.Minute * 5)
+
+	s.Stop()
+
 	// DONE
 }
+
 ```
 
+## `v1` Upgrade guide
+
+In an effort to make the `lib` package easier to work with when used as a dependency for Go tests, the following changes were made to its API in the `v1` release:
+
+- `Start()` is no longer blocking. It will either unblock as soon as the proxy starts listening or return an error if proxy startup fails;
+- `Stop()` waits for all proxy connections to close before returning;
+- a field name typo `sawAmplitute` was fixed in `LatencyCfg` struct (renamed to `SawAmplitude`).

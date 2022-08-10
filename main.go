@@ -30,10 +30,19 @@ func main() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
+	done := make(chan bool)
+
 	go func() {
 		<-sigs
-		go s.Stop()
+		// signal was caught for the first time
+		// stop the speedbump instance
+		go func() {
+			s.Stop()
+			done <- true
+		}()
 		<-sigs
+		// signal was caught for the second time
+		// force the process to exit
 		os.Exit(1)
 	}()
 
@@ -42,4 +51,6 @@ func main() {
 	if err != nil {
 		exitWithError(err)
 	}
+
+	<-done
 }

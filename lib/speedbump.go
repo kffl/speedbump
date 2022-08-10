@@ -114,9 +114,8 @@ func (s *Speedbump) startProxyConnection(p *connection) {
 	p.start()
 }
 
-// Start launches a Speedbump instance. This operation will either block
-// until all proxy connections are closed following a Stop() call or
-// return immedietely if a ListenTCP error occurrs at startup.
+// Start launches a Speedbump instance. This operation will unblock either
+// as soon as the proxy starts listening or when a startup error occurrs.
 func (s *Speedbump) Start() error {
 	listener, err := net.ListenTCP("tcp", &s.srcAddr)
 	if err != nil {
@@ -130,21 +129,20 @@ func (s *Speedbump) Start() error {
 
 	s.log.Info("Started speedbump", "port", s.srcAddr.Port, "dest", s.destAddr.String())
 
-	// startAcceptLoop will block until Stop() is called
-	s.startAcceptLoop()
-	s.log.Debug("Waiting for active connections to be closed")
-	s.active.Wait()
-	s.log.Info("Speedbump stopped")
+	go s.startAcceptLoop()
 	return nil
 }
 
 // Stop closes the Speedbump instance's TCP listener and notifies all existing
-// proxy connections that Speedbump is shutting down. It doesn't wait for
-// the individual proxy connections to close prior to returning.
+// proxy connections that Speedbump is shutting down. It waits for individual
+// proxy connections to close before returning.
 func (s *Speedbump) Stop() {
 	s.log.Info("Stopping speedbump")
 	// close TCP listener so that startAcceptLoop returns
 	s.listener.Close()
 	// notify all proxy connections
 	s.ctxCancel()
+	s.log.Debug("Waiting for active connections to be closed")
+	s.active.Wait()
+	s.log.Info("Speedbump stopped")
 }

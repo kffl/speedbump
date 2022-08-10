@@ -135,24 +135,15 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 		"WARN",
 	}
 	s, err := NewSpeedbump(&cfg)
-	go s.Start()
+	s.Start()
 
 	assert.Nil(t, err)
 
 	tcpAddr, _ := net.ResolveTCPAddr("tcp", "localhost:8000")
 
-	var conn *net.TCPConn
-
-	// Wait for the speedbump instance to start listening
-	// since it is started in a separate goroutine, we don't know
-	// if it has already started listening by this point
-	for {
-		conn, err = net.DialTCP("tcp", nil, tcpAddr)
-		if err != nil {
-			time.Sleep(10 * time.Millisecond)
-		} else {
-			break
-		}
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	if err != nil {
+		panic(err)
 	}
 
 	firstOpStart := time.Now()
