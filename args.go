@@ -9,6 +9,9 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 	var app = kingpin.New("speedbump", "TCP proxy for simulating variable network latency.")
 
 	var (
+		host = app.Flag("host", "IP or hostname to listen on. Speedbump will bind to all network interfaces if unspecified.").
+			Default("").
+			String()
 		port       = app.Flag("port", "Port number to listen on.").Default("8000").Int()
 		bufferSize = app.Flag("buffer", "Size of the buffer used for TCP reads.").
 				Default("64KB").
@@ -59,6 +62,7 @@ func parseArgs(args []string) (*lib.SpeedbumpCfg, error) {
 	}
 
 	var cfg = lib.SpeedbumpCfg{
+		Host:       *host,
 		Port:       *port,
 		DestAddr:   *destAddr,
 		BufferSize: int(*bufferSize),

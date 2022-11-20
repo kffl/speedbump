@@ -25,6 +25,7 @@ func TestParseArgsError(t *testing.T) {
 func TestParseArgsAll(t *testing.T) {
 	cfg, err := parseArgs(
 		[]string{
+			"--host=somehost",
 			"--port=1234",
 			"--buffer=200B",
 			"--latency=100ms",
@@ -39,6 +40,7 @@ func TestParseArgsAll(t *testing.T) {
 	)
 	assert.Nil(t, err)
 	assert.Equal(t, cfg.DestAddr, "host:777")
+	assert.Equal(t, cfg.Host, "somehost")
 	assert.Equal(t, cfg.Port, 1234)
 	assert.Equal(t, 200, cfg.BufferSize)
 	assert.Equal(t, time.Millisecond*100, cfg.Latency.Base)
