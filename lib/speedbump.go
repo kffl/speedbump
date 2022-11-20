@@ -30,6 +30,8 @@ type Speedbump struct {
 
 // SpeedbumpCfg contains Spedbump instance configuration
 type SpeedbumpCfg struct {
+	// IP or a hostname to listen on (binds to all network interfaces if unspecified)
+	Host string
 	// Port specifies the local port number to listen on
 	Port int
 	// DestAddr specifies the proxy desination address in host:port format
@@ -46,7 +48,7 @@ type SpeedbumpCfg struct {
 
 // NewSpeedbump creates a Speedbump instance based on a provided config
 func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
-	localTCPAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", cfg.Port))
+	localTCPAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 	if err != nil {
 		return nil, fmt.Errorf("Error resolving local address: %s", err)
 	}

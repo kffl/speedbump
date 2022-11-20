@@ -37,6 +37,7 @@ func startEchoSrv(port int) error {
 
 func TestNewSpeedbump(t *testing.T) {
 	cfg := SpeedbumpCfg{
+		"localhost",
 		8000,
 		"localhost:1234",
 		0xffff,
@@ -49,8 +50,24 @@ func TestNewSpeedbump(t *testing.T) {
 	assert.Equal(t, 0xffff, s.bufferSize)
 }
 
+func TestNewSpeedbumpInvalidHost(t *testing.T) {
+	cfg := SpeedbumpCfg{
+		"nope",
+		8080,
+		"localhost:1234",
+		0xffff,
+		100,
+		defaultLatencyCfg,
+		"WARN",
+	}
+	s, err := NewSpeedbump(&cfg)
+	assert.Nil(t, s)
+	assert.ErrorContains(t, err, "lookup nope")
+}
+
 func TestNewSpeedbumpErrorResolvingLocal(t *testing.T) {
 	cfg := SpeedbumpCfg{
+		"localhost",
 		-1,
 		"localhost:1234",
 		0xffff,
@@ -65,6 +82,7 @@ func TestNewSpeedbumpErrorResolvingLocal(t *testing.T) {
 
 func TestNewSpeedbumpErrorResolvingDest(t *testing.T) {
 	cfg := SpeedbumpCfg{
+		"localhost",
 		8000,
 		"nope:1234",
 		0xffff,
@@ -93,6 +111,7 @@ func TestNewSpeedbumpDefaultQueueSize(t *testing.T) {
 
 func TestStartListenError(t *testing.T) {
 	cfg := SpeedbumpCfg{
+		"localhost",
 		1, // a privileged port
 		"localhost:1234",
 		0xffff,
@@ -123,6 +142,7 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 	go startEchoSrv(port)
 
 	cfg := SpeedbumpCfg{
+		"localhost",
 		8000,
 		testSrvAddr,
 		0xffff,
