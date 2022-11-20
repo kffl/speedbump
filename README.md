@@ -58,6 +58,8 @@ TCP proxy for simulating variable network latency.
 Flags:
   --help                  Show context-sensitive help (also try --help-long and
                           --help-man).
+  --host=""               IP or hostname to listen on. Speedbump will bind to
+                          all available network interfaces if unspecified.
   --port=8000             Port number to listen on.
   --buffer=64KB           Size of the buffer used for TCP reads.
   --queue-size=1024       Size of the delay queue storing read buffers.
