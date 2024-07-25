@@ -2,7 +2,7 @@ FROM golang:1.17.11-alpine3.16 AS builder
 WORKDIR /go/src/github.com/kffl/speedbump/
 COPY ./ ./
 RUN go get ./
-RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -v -o speedbump .
+RUN CGO_ENABLED=0 go build -v -o speedbump .
 
 FROM alpine:3.16
 
