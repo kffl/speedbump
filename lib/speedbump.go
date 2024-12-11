@@ -26,6 +26,9 @@ type Speedbump struct {
 	ctx       context.Context
 	ctxCancel context.CancelFunc
 	log       hclog.Logger
+	disabled  bool
+
+	activeConnections []*connection
 }
 
 // SpeedbumpCfg contains Spedbump instance configuration
@@ -44,6 +47,8 @@ type SpeedbumpCfg struct {
 	Latency *LatencyCfg
 	// LogLevel can be one of: DEBUG, TRACE, INFO, WARN, ERROR
 	LogLevel string
+	// Disabled allow to start the proxy without injecting latancy until Enalbe method is called
+	Disabled bool
 }
 
 // NewSpeedbump creates a Speedbump instance based on a provided config
@@ -72,6 +77,7 @@ func NewSpeedbump(cfg *SpeedbumpCfg) (*Speedbump, error) {
 		destAddr:   *destTCPAddr,
 		latencyGen: newSimpleLatencyGenerator(time.Now(), cfg.Latency),
 		log:        l,
+		disabled:   cfg.Disabled,
 	}
 	return s, nil
 }
@@ -98,6 +104,7 @@ func (s *Speedbump) startAcceptLoop() {
 			s.queueSize,
 			s.latencyGen,
 			l,
+			!s.disabled,
 		)
 		if err != nil {
 			s.log.Warn("Creating new proxy conn failed", "err", err)
@@ -106,6 +113,7 @@ func (s *Speedbump) startAcceptLoop() {
 		}
 		s.nextConnId++
 		s.active.Add(1)
+		s.activeConnections = append(s.activeConnections, p)
 		go s.startProxyConnection(p)
 	}
 }
@@ -121,7 +129,7 @@ func (s *Speedbump) startProxyConnection(p *connection) {
 func (s *Speedbump) Start() error {
 	listener, err := net.ListenTCP("tcp", &s.srcAddr)
 	if err != nil {
-		return fmt.Errorf("Error starting TCP listener: %s", err)
+		return fmt.Errorf("starting TCP listener: %w", err)
 	}
 	s.listener = listener
 
@@ -147,4 +155,18 @@ func (s *Speedbump) Stop() {
 	s.log.Debug("Waiting for active connections to be closed")
 	s.active.Wait()
 	s.log.Info("Speedbump stopped")
+}
+
+func (s *Speedbump) Enable() {
+	s.disabled = false
+	for _, conn := range s.activeConnections {
+		conn.Enable()
+	}
+}
+
+func (s *Speedbump) Disable() {
+	s.disabled = true
+	for _, conn := range s.activeConnections {
+		conn.Disable()
+	}
 }

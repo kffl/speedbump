@@ -24,6 +24,7 @@ type connection struct {
 	done              chan error
 	ctx               context.Context
 	log               hclog.Logger
+	enabled           bool
 }
 
 func (c *connection) readFromSrc() {
@@ -75,7 +76,9 @@ func (c *connection) readFromDelayQueue() {
 
 		c.log.Trace("Read from delay queue", "bytes", len(t.data))
 
-		time.Sleep(time.Until(t.delayUntil))
+		if c.enabled {
+			time.Sleep(time.Until(t.delayUntil))
+		}
 
 		_, err := c.destConn.Write(t.data)
 		if err != nil {
@@ -124,6 +127,14 @@ func (c *connection) closeProxyConnections() {
 	c.destConn.Close()
 }
 
+func (c *connection) Enable() {
+	c.enabled = true
+}
+
+func (c *connection) Disable() {
+	c.enabled = false
+}
+
 func newProxyConnection(
 	ctx context.Context,
 	clientConn io.ReadWriteCloser,
@@ -133,6 +144,7 @@ func newProxyConnection(
 	queueSize int,
 	latencyGen LatencyGenerator,
 	logger hclog.Logger,
+	enabled bool,
 ) (*connection, error) {
 	destConn, err := net.DialTCP("tcp", nil, destAddr)
 	if err != nil {
@@ -147,6 +159,7 @@ func newProxyConnection(
 		done:       make(chan error, 3),
 		ctx:        ctx,
 		log:        logger,
+		enabled:    enabled,
 	}
 
 	return c, nil

@@ -44,6 +44,7 @@ func TestNewSpeedbump(t *testing.T) {
 		100,
 		defaultLatencyCfg,
 		"WARN",
+		false,
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, err)
@@ -59,6 +60,7 @@ func TestNewSpeedbumpInvalidHost(t *testing.T) {
 		100,
 		defaultLatencyCfg,
 		"WARN",
+		false,
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, s)
@@ -74,6 +76,7 @@ func TestNewSpeedbumpErrorResolvingLocal(t *testing.T) {
 		100,
 		defaultLatencyCfg,
 		"WARN",
+		false,
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, s)
@@ -89,6 +92,7 @@ func TestNewSpeedbumpErrorResolvingDest(t *testing.T) {
 		100,
 		defaultLatencyCfg,
 		"WARN",
+		false,
 	}
 	s, err := NewSpeedbump(&cfg)
 	assert.Nil(t, s)
@@ -118,6 +122,7 @@ func TestStartListenError(t *testing.T) {
 		100,
 		defaultLatencyCfg,
 		"WARN",
+		false,
 	}
 	s, _ := NewSpeedbump(&cfg)
 
@@ -153,6 +158,7 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 			SinePeriod:    time.Millisecond * 400,
 		},
 		"WARN",
+		false,
 	}
 	s, err := NewSpeedbump(&cfg)
 	s.Start()
@@ -194,4 +200,94 @@ func TestSpeedbumpWithEchoServer(t *testing.T) {
 
 	assert.Equal(t, []byte("another-test"), trimmedRes)
 	assert.True(t, isDurationCloseTo(time.Millisecond*200, secondOpElapsed, 20))
+}
+
+func TestShouldDontDelayWhenDisabled(t *testing.T) {
+	port := 9006
+	testSrvAddr := fmt.Sprintf("localhost:%d", port)
+
+	go startEchoSrv(port)
+
+	cfg := SpeedbumpCfg{
+		"localhost",
+		8000,
+		testSrvAddr,
+		0xffff,
+		100,
+		&LatencyCfg{
+			Base: time.Millisecond * 250,
+		},
+		"WARN",
+		true,
+	}
+	s, err := NewSpeedbump(&cfg)
+	s.Start()
+
+	assert.Nil(t, err)
+
+	tcpAddr, _ := net.ResolveTCPAddr("tcp", "localhost:8000")
+
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	if err != nil {
+		panic(err)
+	}
+
+	firstOpStart := time.Now()
+
+	conn.Write([]byte("test-string"))
+	res := make([]byte, 1024)
+	bytes, _ := conn.Read(res)
+
+	firstOpElapsed := time.Since(firstOpStart)
+
+	trimmedRes := res[:bytes]
+
+	assert.Equal(t, []byte("test-string"), trimmedRes)
+	assert.Less(t, firstOpElapsed, 1*time.Millisecond)
+}
+
+func TestShouldDelayWhenDisabledAndthenSwitchToEnable(t *testing.T) {
+	port := 9006
+	testSrvAddr := fmt.Sprintf("localhost:%d", port)
+
+	go startEchoSrv(port)
+
+	cfg := SpeedbumpCfg{
+		"localhost",
+		8000,
+		testSrvAddr,
+		0xffff,
+		100,
+		&LatencyCfg{
+			Base: time.Millisecond * 250,
+		},
+		"WARN",
+		true,
+	}
+	s, err := NewSpeedbump(&cfg)
+	s.Start()
+	s.Enable()
+
+	assert.Nil(t, err)
+
+	tcpAddr, _ := net.ResolveTCPAddr("tcp", "localhost:8000")
+
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	if err != nil {
+		panic(err)
+	}
+
+	firstOpStart := time.Now()
+
+	conn.Write([]byte("test-string"))
+	res := make([]byte, 1024)
+	bytes, _ := conn.Read(res)
+
+	firstOpElapsed := time.Since(firstOpStart)
+
+	trimmedRes := res[:bytes]
+
+	fmt.Printf("*** %+v\n", firstOpElapsed)
+	assert.Equal(t, []byte("test-string"), trimmedRes)
+	assert.True(t, isDurationCloseTo(time.Millisecond*250, firstOpElapsed, 20))
 }

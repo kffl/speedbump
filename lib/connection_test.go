@@ -299,6 +299,7 @@ func TestNewProxyConnectionError(t *testing.T) {
 		100,
 		&mockLatencyGenerator{time.Millisecond * 10},
 		hclog.Default(),
+		false,
 	)
 
 	assert.NotNil(t, err)
